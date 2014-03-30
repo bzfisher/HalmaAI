@@ -1,8 +1,10 @@
 package s260488774;
 
 import halma.CCBoard;
+import halma.CCMove;
 
 import java.awt.Point;
+import java.util.Random;
 
 public class boardAnalyzer
 {
@@ -11,16 +13,67 @@ public class boardAnalyzer
 	private final static int SPLIT_DISTANCE_MULTIPLIER = 1;
 
 
+	/**
+	 * the "farthest" base point for each player.
+	 */
 	private static Point[] bases = {	new Point(0,0), 
 		new Point(15,0),
 		new Point(0,15),
 		new Point(15,15)};
+	
+	/**
+	 * the furthest target zone point for each player.
+	 */
 	private static Point[] targets = {	new Point(15,15), 
 		new Point(0,15),
 		new Point(15,0),
 		new Point(0,0)};
+	private static Random r = new Random();
 
-	public static double analyize(CCBoard board, int currPlayer)
+	
+	
+	public static CCMove maxMove(CCBoard inputBoard)
+	{
+		//initialize the best score to be the current score; this way we won't do any worse.
+		double currScore = boardAnalyzer.boardUtility(inputBoard, inputBoard.getTurn());
+		double bestScore = currScore;
+
+		CCMove bestMove = inputBoard.getLegalMoves().get(r.nextInt(inputBoard.getLegalMoves().size()));
+		boolean endTurnMoveExists =false;
+
+		for (CCMove move:inputBoard.getLegalMoves())
+		{
+			if (move.getFrom()!=null)
+			{
+				CCBoard newBoard = (CCBoard)inputBoard.clone();
+				newBoard.move(move);
+				if ((boardUtility(newBoard, inputBoard.getTurn())>bestScore))
+				{
+					bestScore = boardUtility(newBoard, inputBoard.getTurn());
+					bestMove = move;
+				}
+			}
+			else
+			{
+				endTurnMoveExists = true;
+			}
+		}
+		
+		//if we didn't improve our score, than return an empty move if possible
+		if (bestScore==currScore) 
+		{
+			if (endTurnMoveExists) return new CCMove(inputBoard.getTurn(), null, null);
+		}
+		//else, if we can't return an empty move or we improved our score, return the best move.
+		return bestMove;
+	}
+	
+	/**
+	 * @param board the current gameboard.
+	 * @param currPlayer the player for which we wish to calculate the board score.
+	 * @return the value of the current board to the current player.
+	 */
+	private static double boardUtility(CCBoard board, int currPlayer)
 	{		
 		double currPlayersScore = 0;
 		double enemyPlayersScore = 0;
