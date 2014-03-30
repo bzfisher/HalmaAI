@@ -11,6 +11,7 @@ public class boardAnalyzer
 	private final static int DISTANCE_FROM_BASE_MULTIPLIER = 1;
 	private final static int OFF_CENTRE_DISTANCE_MULTIPLIER = 1;
 	private final static int SPLIT_DISTANCE_MULTIPLIER = 1;
+	private static Random r = new Random();
 
 
 	/**
@@ -28,7 +29,6 @@ public class boardAnalyzer
 		new Point(0,15),
 		new Point(15,0),
 		new Point(0,0)};
-	private static Random r = new Random();
 
 	
 	
@@ -73,7 +73,7 @@ public class boardAnalyzer
 	 * @param currPlayer the player for which we wish to calculate the board score.
 	 * @return the value of the current board to the current player.
 	 */
-	private static double boardUtility(CCBoard board, int currPlayer)
+	public static double boardUtility(CCBoard board, int currPlayer)
 	{		
 		double currPlayersScore = 0;
 		double enemyPlayersScore = 0;
