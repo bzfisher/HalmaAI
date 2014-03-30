@@ -13,7 +13,7 @@ import boardgame.Player;
 
 public class s260488774Player extends Player
 {
-	
+
 	/** Provide a default public constructor */
 	public s260488774Player() { super("random"); }
 	public s260488774Player(String s) { super(s); }
@@ -24,37 +24,38 @@ public class s260488774Player extends Player
 		new Point(0,2), new Point(1,2), new Point(2,2),
 		new Point(0,3), new Point(1,3)};
 	private Random r = new Random();
-	
+
 	@Override
 	public Move chooseMove(Board inputBoard)
 	{
 		CCBoard board = (CCBoard) inputBoard;
-
-		//Get all the legal moves, minus endTurn.
-		ArrayList<CCMove> moves = new ArrayList<CCMove>();
-		CCMove endTurn = board.getLegalMoves().get(0);
-		for (CCMove move: board.getLegalMoves())
-		{
-			if (move.getFrom()!=null) moves.add(move);
-			else endTurn=move;
-		}
-
-		//if there are moves other than just the endTurn move, then return a random good move.
-		if (moves.size()>0)
-		{
-			ArrayList<CCMove> bestMoves = turnAnalyzer.findBestMoves(moves);
-			return bestMoves.get(r.nextInt(bestMoves.size()));
-		}
-		return endTurn;
+		return bestMove(board);
 	}
 
-	/**
-	 * @param moves the list of legal moves, without endTurn move.
-	 * @return the move with the highest score.
-	 */
+	public CCMove bestMove(CCBoard inputBoard)
+	{
+		double currScore = boardAnalyzer.analyize(inputBoard, inputBoard.getTurn());
+		double bestScore = currScore;
+		CCMove bestMove = inputBoard.getLegalMoves().get(r.nextInt(inputBoard.getLegalMoves().size()));
+		for (CCMove move:inputBoard.getLegalMoves())
+		{
+			if (move.getFrom()!=null)
+			{
+				CCBoard newBoard = (CCBoard)inputBoard.clone();
+				newBoard.move(move);
+				if ((boardAnalyzer.analyize(newBoard, inputBoard.getTurn())>bestScore))
+				{
+					bestScore = boardAnalyzer.analyize(newBoard, inputBoard.getTurn());
+					bestMove = move;
+				}
+			}
+		}
+		System.out.println("before: "+currScore+" after: "+bestScore+" by: "+bestMove.toPrettyString());
+		return bestMove;
+	}
 
 
-	
+
 
 
 

@@ -42,7 +42,7 @@ public class turnAnalyzer
 	 */
 	private static int moveScore(CCMove move)
 	{
-		return IsGoodDiagnalMove(move)+IsGoodMove(move)+2*moveFromEndzone(move)+isHop(move);
+		return IsGoodDiagnalMove(move)+0*IsGoodMove(move)+2*moveFromEndzone(move)+isHop(move);
 	}
 
 	/**
