@@ -5,6 +5,7 @@ import halma.CCMove;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 import boardgame.Board;
 import boardgame.Move;
@@ -12,7 +13,7 @@ import boardgame.Player;
 
 public class s260488774Player extends Player
 {
-
+	
 	/** Provide a default public constructor */
 	public s260488774Player() { super("random"); }
 	public s260488774Player(String s) { super(s); }
@@ -22,7 +23,8 @@ public class s260488774Player extends Player
 		new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1),
 		new Point(0,2), new Point(1,2), new Point(2,2),
 		new Point(0,3), new Point(1,3)};
-
+	private Random r = new Random();
+	
 	@Override
 	public Move chooseMove(Board inputBoard)
 	{
@@ -37,10 +39,11 @@ public class s260488774Player extends Player
 			else endTurn=move;
 		}
 
+		//if there are moves other than just the endTurn move, then return a random good move.
 		if (moves.size()>0)
 		{
-			CCMove bestMove = findBestMove(moves);
-			return bestMove;
+			ArrayList<CCMove> bestMoves = turnAnalyzer.findBestMoves(moves);
+			return bestMoves.get(r.nextInt(bestMoves.size()));
 		}
 		return endTurn;
 	}
@@ -49,78 +52,9 @@ public class s260488774Player extends Player
 	 * @param moves the list of legal moves, without endTurn move.
 	 * @return the move with the highest score.
 	 */
-	private CCMove findBestMove(ArrayList<CCMove> moves)
-	{
-		CCMove bestMove = moves.get(0);
-		int bestMoveScore = moveScore(bestMove);
-		System.out.println("initial bestMoveScore = "+bestMoveScore);
-		for (CCMove move : moves)
-		{
-			System.out.println(move.toPrettyString()+", "+moveScore(move));
-			if (moveScore(move)>bestMoveScore)
-			{
-				bestMoveScore = moveScore(move);
-				bestMove = move;
-			}
-		}
-		return bestMove;
-	}
 
-	/**
-	 * @param move the move to be analyzed
-	 * @return the score (between 1 and 4) of the move. Higher is better.
-	 */
-	private int moveScore(CCMove move)
-	{
-		return IsGoodDiagnalMove(move)+IsGoodMove(move)+moveFromEndzone(move)+isHop(move);
-	}
 
-	/**
-	 * @param move the move to analyze
-	 * @return 1 if the move is a diagonal one in the right direction; 0 otherwise.
-	 */
-	private int IsGoodDiagnalMove(CCMove move)
-	{
-		if ((move.getFrom().getX()<move.getTo().getX()) && (move.getFrom().getY()<move.getTo().getY())){
-			return 1;
-		}
-		else return 0;
-	}
-
-	/**
-	 * @param move the move to analyze
-	 * @return 1 if the move is in the right horizonal/vertical direction; 0 otherwise.
-	 */
-	private int IsGoodMove(CCMove move)
-	{
-		if ((move.getFrom().getX()<move.getTo().getX()) || (move.getFrom().getY()<move.getTo().getY())){
-			return 1;
-		}
-		else return 0;
-	}
-
-	/**
-	 * @param move the move to analyze
-	 * @return 1 if the move originates from a basepoint; 0 otherwise.
-	 */
-	private int moveFromEndzone(CCMove move)
-	{
-		for (Point basePt: basePoints)
-		{
-			if (move.getFrom().equals(basePt)) return 1;
-		}
-		return 0;
-	}
-
-	/**
-	 * @param move the move to analyze
-	 * @return 1 if the move is a hop; 0 otherwise.
-	 */
-	private int isHop(CCMove move)
-	{
-		if (move.isHop()) return 1;
-		return 0;
-	}
+	
 
 
 
