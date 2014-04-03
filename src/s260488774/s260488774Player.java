@@ -25,10 +25,7 @@ public class s260488774Player extends Player
 	public Move chooseMove(Board inputBoard)
 	{
 		CCBoard board = (CCBoard) inputBoard;
-		System.out.println("Original: "+boardAnalyzer.maxMove(board).toPrettyString());
-		System.out.println("New: "+minimaxValue(board, null, board.getTurn(), board.getTurn(), 1).getaMove().toPrettyString());
-		if (board.getTurn()==0 || board.getTurn()==3) return boardAnalyzer.maxMove(board);
-		return minimaxValue(board, null, board.getTurn(), board.getTurn(), 2).getaMove();
+		return boardAnalyzer.maxMove(board);
 	}
 
 	private MoveAndScore minimaxValue(CCBoard board, CCMove lastMove, int turnPlayer, int actualPlayer, int iterationsLeft)
