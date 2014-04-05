@@ -9,7 +9,9 @@ public class HalmaHeuristics
 	private final static int DISTANCE_FROM_BASE_MULTIPLIER = 1;
 	private final static int OFF_CENTRE_DISTANCE_MULTIPLIER = 1;
 	private final static int SPLIT_DISTANCE_MULTIPLIER = 1;
-
+	private final static int CHECK_IF_WIN_MULTIPLIER = 1;
+	private final static int NON_EDGE_TARGET_PIECES_MULTIPLIER = 1;
+	private final static int EDGE_TARGET_PIECES_MULTIPLIER = 1;
 
 	/**
 	 * the "farthest" base point for each player.
@@ -61,7 +63,7 @@ public class HalmaHeuristics
 
 	private static int[] oppositePlayerID = {3, 2, 1, 0};
 	/**
-	 * @param board the current gameboard.
+	 * @param board the current game board.
 	 * @param currPlayer the player for which we wish to calculate the board score.
 	 * @return the value of the current board to the current player.
 	 */
@@ -74,11 +76,11 @@ public class HalmaHeuristics
 		{
 			if (CCBoard.getTeamIndex(i)==CCBoard.getTeamIndex(currPlayer))
 			{
-				currPlayersScore = currPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board));
+				currPlayersScore = currPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
 			}
 			else
 			{
-				enemyPlayersScore = enemyPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board));
+				enemyPlayersScore = enemyPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board))+(CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
 			}
 		}
 		return currPlayersScore-enemyPlayersScore;
@@ -88,9 +90,9 @@ public class HalmaHeuristics
 
 
 	/**
-	 * @param playerID the player ID for whom we wish to find the total manhattan distance.
+	 * @param playerID the player ID for whom we wish to find the total Manhattan distance.
 	 * @param board the current game board.
-	 * @return the total manhattan distance between all the player's pieces and the "furthest" base point (the corner point). Higher is better for the player.
+	 * @return the total Manhattan distance between all the player's pieces and the "farthest" base point (the corner point). Higher is better for the player.
 	 */
 	private static double distanceFromBase(int playerID, CCBoard board)
 	{
@@ -105,7 +107,7 @@ public class HalmaHeuristics
 	/**
 	 * @param location the current location.
 	 * @param target the target point.
-	 * @return the manhattan distance between current location and the target point.
+	 * @return the Manhattan distance between current location and the target point.
 	 */
 	private static double manhattanDistance(Point location, Point target)
 	{
@@ -157,7 +159,7 @@ public class HalmaHeuristics
 	/**
 	 * @param playerID the current player.
 	 * @param board the current board.
-	 * @return the manahattan distance between the frontmost piece and the backmost piece. Lower is better.
+	 * @return the Manhattan distance between the front most piece and the back most piece. Lower is better.
 	 */
 	private static double splitDistance(int playerID, CCBoard board)
 	{
@@ -179,12 +181,12 @@ public class HalmaHeuristics
 
 	
 	/**
-	 * Checks if the player won. Higher is better.
+	 * Checks if the player has won. Higher is better.
 	 * @param ID the player ID we are checking for. 
 	 * @param board the board game as it currently is.
 	 * @return 1 if the player has won, 0 if not.
 	 */
-	private double checkIfWin(int ID, CCBoard board){
+	private static double checkIfWin(int ID, CCBoard board){
 		assert(ID<4);
 		boolean win=true;
 		int base_id= ID^3;
@@ -203,10 +205,10 @@ public class HalmaHeuristics
 	/**
 	 * checks how many pieces are at the edges of the target zone. Higher is better. 
 	 * @param ID the player ID we are checking for.
-	 * @param board the current gameboard.
+	 * @param board the current game board.
 	 * @return number of pieces at edge of target zone.
 	 */
-	private double NumberOfPiecesAtEdgeOfTarget(int ID, CCBoard board)
+	private static double NumberOfPiecesAtEdgeOfTarget(int ID, CCBoard board)
 	{
 		double edgeResult = 0;
 		for (Point piece: board.getPieces(ID))
@@ -228,7 +230,7 @@ public class HalmaHeuristics
 	 * @param board the current game board.
 	 * @return the number of pieces at the non-edge of the target zone.
 	 */
-	private double NumberOfPiecesAtNonEdgeOfTarget(int ID, CCBoard board)
+	private static double NumberOfPiecesAtNonEdgeOfTarget(int ID, CCBoard board)
 	{
 		double nonEdgeResult = 0;
 		for (Point piece: board.getPieces(ID))
