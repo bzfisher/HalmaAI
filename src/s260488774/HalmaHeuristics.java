@@ -1,4 +1,4 @@
-package s260488774heusticiPlayer;
+package s260488774;
 
 import halma.CCBoard;
 import halma.CCMove;
@@ -6,7 +6,7 @@ import halma.CCMove;
 import java.awt.Point;
 import java.util.Random;
 
-public class boardAnalyzer
+public class HalmaHeuristics
 {
 	private final static int DISTANCE_FROM_BASE_MULTIPLIER = 1;
 	private final static int OFF_CENTRE_DISTANCE_MULTIPLIER = 1;
@@ -31,43 +31,6 @@ public class boardAnalyzer
 		new Point(0,0)};
 
 	
-	
-	public static CCMove maxMove(CCBoard inputBoard)
-	{
-		//initialize the best score to be the current score; this way we won't do any worse.
-		double currScore = boardAnalyzer.boardUtility(inputBoard, inputBoard.getTurn());
-		double bestScore = currScore;
-
-		CCMove bestMove = inputBoard.getLegalMoves().get(r.nextInt(inputBoard.getLegalMoves().size()));
-		boolean endTurnMoveExists =false;
-
-		for (CCMove move:inputBoard.getLegalMoves())
-		{
-			if (move.getFrom()!=null)
-			{
-				CCBoard newBoard = (CCBoard)inputBoard.clone();
-				newBoard.move(move);
-				if ((boardUtility(newBoard, inputBoard.getTurn())>bestScore))
-				{
-					bestScore = boardUtility(newBoard, inputBoard.getTurn());
-					bestMove = move;
-				}
-			}
-			else
-			{
-				endTurnMoveExists = true;
-			}
-		}
-		
-		//if we didn't improve our score, than return an empty move if possible
-		if (bestScore==currScore) 
-		{
-			if (endTurnMoveExists) return new CCMove(inputBoard.getTurn(), null, null);
-		}
-		//else, if we can't return an empty move or we improved our score, return the best move.
-		return bestMove;
-	}
-	
 	/**
 	 * @param board the current gameboard.
 	 * @param currPlayer the player for which we wish to calculate the board score.
@@ -89,7 +52,6 @@ public class boardAnalyzer
 				enemyPlayersScore = enemyPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board));
 			}
 		}
-		if (board.getTurn()==2) System.out.println("curr: "+currPlayersScore + " enemy: "+enemyPlayersScore);
 		return currPlayersScore-enemyPlayersScore;
 	}
 

@@ -41,7 +41,7 @@ public class s260488774minimaxPlayer extends Player
 	private CCMove miniMax(CCBoard board, int iterationsLeft)
 	{
 		ArrayList<CCMove> legalMoves = board.getLegalMoves();
-		double bestScore = boardAnalyzer.boardUtility(board, board.getTurn());
+		double bestScore = HalmaHeuristics.boardUtility(board, board.getTurn());
 		double originalScore = bestScore;
 
 		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
@@ -105,11 +105,11 @@ public class s260488774minimaxPlayer extends Player
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		//if we are at the last turn, return the actual board score.
-		if (iterationsLeft<1 || (currentTime-startTime) < 100) return boardAnalyzer.boardUtility(board, actualPlayer);
+		if (iterationsLeft<1 || (currentTime-startTime) < 100) return HalmaHeuristics.boardUtility(board, actualPlayer);
 
 		//otherwise, analyize the possible moves with recursion.
 		ArrayList<CCMove> allowedMoves = board.getLegalMoves();
-		double topScore = boardAnalyzer.boardUtility(board, actualPlayer);
+		double topScore = HalmaHeuristics.boardUtility(board, actualPlayer);
 		for (CCMove move:allowedMoves)
 		{
 			//if the move is not an end-turn move, proceed.
@@ -144,7 +144,7 @@ public class s260488774minimaxPlayer extends Player
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		//if we are at the last turn, return the actual board score.
-		if (depth<1 || (currentTime-startTime) < 100) return boardAnalyzer.boardUtility(board, actualPlayer);
+		if (depth<1 || (currentTime-startTime) < 100) return HalmaHeuristics.boardUtility(board, actualPlayer);
 		
 		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
 		{

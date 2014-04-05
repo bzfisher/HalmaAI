@@ -41,7 +41,7 @@ public class s260488774Player extends Player
 	private CCMove alphaBeta(CCBoard board, int iterationsLeft)
 	{
 		ArrayList<CCMove> legalMoves = board.getLegalMoves();
-		double bestScore = boardAnalyzer.boardUtility(board, board.getTurn());
+		double bestScore = HalmaHeuristics.boardUtility(board, board.getTurn());
 		double originalScore = bestScore;
 
 		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
@@ -95,7 +95,7 @@ public class s260488774Player extends Player
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		//if we are at the last turn, return the actual board score.
-		if (depth<1 || (currentTime-startTime) < 30) return boardAnalyzer.boardUtility(board, actualPlayer);
+		if (depth<1 || (currentTime-startTime) < 30) return HalmaHeuristics.boardUtility(board, actualPlayer);
 
 		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
 		{
