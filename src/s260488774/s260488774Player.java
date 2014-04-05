@@ -3,7 +3,9 @@ package s260488774;
 import halma.CCBoard;
 import halma.CCMove;
 
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 import boardgame.Board;
@@ -13,8 +15,9 @@ import boardgame.Player;
 public class s260488774Player extends Player
 {
 	private Random r = new Random();
-
-	public CCMove lastMove = new CCMove(0,null,null);
+	int startTime;
+	
+	public ArrayList<CCMove> previousMovesInTurn = new ArrayList<CCMove>();
 	/** Provide a default public constructor */
 	public s260488774Player() { super("random"); }
 	public s260488774Player(String s) { super(s); }
@@ -24,6 +27,7 @@ public class s260488774Player extends Player
 	@Override
 	public Move chooseMove(Board inputBoard)
 	{
+		startTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		CCBoard board = (CCBoard) inputBoard;
 		return miniMax(board, 2);
 	}
@@ -39,6 +43,7 @@ public class s260488774Player extends Player
 		ArrayList<CCMove> legalMoves = board.getLegalMoves();
 		double bestScore = boardAnalyzer.boardUtility(board, board.getTurn());
 		double originalScore = bestScore;
+
 		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
 		boolean nullMoveExists = false;
 		for (CCMove move: legalMoves)
@@ -55,21 +60,35 @@ public class s260488774Player extends Player
 				}
 			}
 			else nullMoveExists=true;
-		}
-		if (bestScore==originalScore)
+		}		
+		
+		//if we already played this move this turn, choose a random move instead.
+		for (CCMove previousMove: previousMovesInTurn)
 		{
-			if (nullMoveExists) return new CCMove(board.getTurn(), null, null);
-		}
-		if (lastMove.getFrom()!=null)
-		{
-			if ((lastMove.getFrom().equals(bestMove.getTo())) && (lastMove.getTo().equals(bestMove.getFrom())))
+			if (bestMove.getFrom()!=null)
+			if (movesEqual(previousMove, bestMove))
 			{
-				lastMove = legalMoves.get(r.nextInt(legalMoves.size()));
-				return lastMove;
+				bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
 			}
 		}
-		lastMove = bestMove;
-		return lastMove;
+		
+		if (bestScore==originalScore)
+		{
+			if (nullMoveExists) bestMove =  new CCMove(board.getTurn(), null, null);
+		}
+		
+		//if this is the last move this turn, clear our previousMovesInTurn list.
+		CCBoard newBoard = (CCBoard)board.clone();
+		newBoard.move(bestMove);
+		if (newBoard.getTurn()!=board.getTurn())
+		{
+			previousMovesInTurn.clear();
+			return bestMove;
+		}
+		
+		//else, add the move to the previous moves list, and return it.
+		previousMovesInTurn.add(bestMove);
+		return bestMove;
 	}
 
 
@@ -84,8 +103,9 @@ public class s260488774Player extends Player
 	 */
 	private double minimaxHelper(CCBoard board, int turnPlayer, int actualPlayer, int iterationsLeft)
 	{
+		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		//if we are at the last turn, return the actual board score.
-		if (iterationsLeft<1) return boardAnalyzer.boardUtility(board, actualPlayer);
+		if (iterationsLeft<1 || (currentTime-startTime) < 100) return boardAnalyzer.boardUtility(board, actualPlayer);
 
 		//otherwise, analyize the possible moves with recursion.
 		ArrayList<CCMove> allowedMoves = board.getLegalMoves();
@@ -119,5 +139,18 @@ public class s260488774Player extends Player
 			}
 		}
 		return topScore;
+	}
+	
+	private boolean movesEqual(CCMove move1, CCMove move2)
+	{
+		Point from1 = move1.getFrom();
+		Point from2 = move2.getFrom();
+		Point to1 = move1.getTo();
+		Point to2 = move2.getTo();
+		if (from1.getX()==from2.getX() && from1.getY()==from2.getY())
+		{
+			if (to1.getX()==to2.getX() && to1.getY()==to2.getY())  return true;
+		}
+		return false;
 	}
 }
