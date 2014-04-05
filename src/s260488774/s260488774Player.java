@@ -39,7 +39,6 @@ public class s260488774Player extends Player
 		ArrayList<CCMove> legalMoves = board.getLegalMoves();
 		double bestScore = boardAnalyzer.boardUtility(board, board.getTurn());
 		double originalScore = bestScore;
-
 		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
 		boolean nullMoveExists = false;
 		for (CCMove move: legalMoves)
@@ -85,46 +84,40 @@ public class s260488774Player extends Player
 	 */
 	private double minimaxHelper(CCBoard board, int turnPlayer, int actualPlayer, int iterationsLeft)
 	{
+		//if we are at the last turn, return the actual board score.
 		if (iterationsLeft<1) return boardAnalyzer.boardUtility(board, actualPlayer);
 
-		//if it is either our turn or the co-op player turn, try to maximize the score.
-		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
+		//otherwise, analyize the possible moves with recursion.
+		ArrayList<CCMove> allowedMoves = board.getLegalMoves();
+		double topScore = boardAnalyzer.boardUtility(board, actualPlayer);
+		for (CCMove move:allowedMoves)
 		{
-			ArrayList<CCMove> legalMoves = board.getLegalMoves();
-			double bestScore = boardAnalyzer.boardUtility(board, actualPlayer);
-			for (CCMove move:legalMoves)
-			{
-				if (move.getFrom()!=null)
-				{
-					CCBoard newBoard = (CCBoard)board.clone();
-					newBoard.move(move);
-					double currScore = minimaxHelper(newBoard, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
-					if (currScore>bestScore)
-					{
-						bestScore = currScore;
-					}					
-				}
-			}
-			return bestScore;
-		}
-
-		//if it is the turn of an opposing player, try to minimize the board's value.
-		ArrayList<CCMove> legalMoves = board.getLegalMoves();
-		double worstScore = boardAnalyzer.boardUtility(board, actualPlayer);
-		for (CCMove move:legalMoves)
-		{
+			//if the move is not an end-turn move, proceed.
 			if (move.getFrom()!=null)
 			{
 				CCBoard newBoard = (CCBoard)board.clone();
 				newBoard.move(move);
 				double currScore = minimaxHelper(newBoard, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
-				if (currScore<worstScore)
+				
+				//score improves for co-op players if it is greater. 
+				if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
 				{
-					worstScore = currScore;
-				}					
+					if (currScore>topScore)
+					{
+						topScore = currScore;
+					}	
+				}
+				
+				//score improves for enemy players if it is lesser. 
+				else if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
+				{
+					if (currScore<topScore)
+					{
+						topScore = currScore;
+					}
+				}
 			}
 		}
-		return worstScore;
-
+		return topScore;
 	}
 }
