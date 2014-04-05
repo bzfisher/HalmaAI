@@ -89,7 +89,6 @@ public class boardAnalyzer
 				enemyPlayersScore = enemyPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board));
 			}
 		}
-		if (board.getTurn()==2) System.out.println("curr: "+currPlayersScore + " enemy: "+enemyPlayersScore);
 		return currPlayersScore-enemyPlayersScore;
 	}
 

@@ -14,7 +14,7 @@ public class s260488774Player extends Player
 {
 	private Random r = new Random();
 
-
+	public CCMove lastMove = new CCMove(0,null,null);
 	/** Provide a default public constructor */
 	public s260488774Player() { super("random"); }
 	public s260488774Player(String s) { super(s); }
@@ -25,66 +25,106 @@ public class s260488774Player extends Player
 	public Move chooseMove(Board inputBoard)
 	{
 		CCBoard board = (CCBoard) inputBoard;
-		return boardAnalyzer.maxMove(board);
+		return miniMax(board, 2);
 	}
 
-	private MoveAndScore minimaxValue(CCBoard board, CCMove lastMove, int turnPlayer, int actualPlayer, int iterationsLeft)
+	/**
+	 * Top level function for minimax recursion algorithm. Calls the helper (which does the actual recursion), and proccesses and results.
+	 * @param board the current game board. 
+	 * @param iterationsLeft number of iterations we wish to perform. 
+	 * @return The best move according to the mini-max algorithm.
+	 */
+	private CCMove miniMax(CCBoard board, int iterationsLeft)
 	{
-		if (iterationsLeft<1) return new MoveAndScore(lastMove, boardAnalyzer.boardUtility(board, actualPlayer));
+		ArrayList<CCMove> legalMoves = board.getLegalMoves();
+		double bestScore = boardAnalyzer.boardUtility(board, board.getTurn());
+		double originalScore = bestScore;
+
+		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
+		boolean nullMoveExists = false;
+		for (CCMove move: legalMoves)
+		{
+			if (move.getFrom()!=null)
+			{
+				CCBoard newBoard = (CCBoard)board.clone();
+				newBoard.move(move);
+				double currScore = minimaxHelper(newBoard, newBoard.getTurn(), board.getTurn(), iterationsLeft-1);
+				if (currScore>bestScore)
+				{
+					bestScore = currScore;
+					bestMove = move;
+				}
+			}
+			else nullMoveExists=true;
+		}
+		if (bestScore==originalScore)
+		{
+			if (nullMoveExists) return new CCMove(board.getTurn(), null, null);
+		}
+		if (lastMove.getFrom()!=null)
+		{
+			if ((lastMove.getFrom().equals(bestMove.getTo())) && (lastMove.getTo().equals(bestMove.getFrom())))
+			{
+				lastMove = legalMoves.get(r.nextInt(legalMoves.size()));
+				return lastMove;
+			}
+		}
+		lastMove = bestMove;
+		return lastMove;
+	}
+
+
+
+	/**
+	 * Performs the actual minimax recursion. Takes into account which team the players are on. 
+	 * @param board The board as it currently stands. 
+	 * @param turnPlayer the current player
+	 * @param actualPlayer the player who called the minimax algorithm from the top level. 
+	 * @param iterationsLeft number of iterations we have left. 
+	 * @return the score of the best/worst move.
+	 */
+	private double minimaxHelper(CCBoard board, int turnPlayer, int actualPlayer, int iterationsLeft)
+	{
+		if (iterationsLeft<1) return boardAnalyzer.boardUtility(board, actualPlayer);
+
+		//if it is either our turn or the co-op player turn, try to maximize the score.
 		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
 		{
 			ArrayList<CCMove> legalMoves = board.getLegalMoves();
-			double currScore = boardAnalyzer.boardUtility(board, board.getTurn());
-			double bestScore = currScore;
-			CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
-			boolean endTurnMoveExists = false;
+			double bestScore = boardAnalyzer.boardUtility(board, actualPlayer);
 			for (CCMove move:legalMoves)
 			{
 				if (move.getFrom()!=null)
 				{
 					CCBoard newBoard = (CCBoard)board.clone();
 					newBoard.move(move);
-					MoveAndScore nextMove = minimaxValue(newBoard, move, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
-					if (nextMove.getaScore()>bestScore)
+					double currScore = minimaxHelper(newBoard, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
+					if (currScore>bestScore)
 					{
-						bestScore = nextMove.getaScore();
-						bestMove = nextMove.getaMove();
+						bestScore = currScore;
 					}					
 				}
-				else endTurnMoveExists = true;
 			}
-			if (bestScore==currScore) 
-			{
-				if (endTurnMoveExists) return new MoveAndScore(new CCMove(turnPlayer, null, null), currScore);
-			}
-			return new MoveAndScore(bestMove, bestScore);
+			return bestScore;
 		}
-		
-		
+
+		//if it is the turn of an opposing player, try to minimize the board's value.
 		ArrayList<CCMove> legalMoves = board.getLegalMoves();
-		double currScore = boardAnalyzer.boardUtility(board, board.getTurn());
-		double bestScore = currScore;
-		CCMove bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
-		boolean endTurnMoveExists = false;
+		double worstScore = boardAnalyzer.boardUtility(board, actualPlayer);
 		for (CCMove move:legalMoves)
 		{
 			if (move.getFrom()!=null)
 			{
 				CCBoard newBoard = (CCBoard)board.clone();
 				newBoard.move(move);
-				MoveAndScore nextMove = minimaxValue(newBoard, move, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
-				if (nextMove.getaScore()<bestScore)
+				double currScore = minimaxHelper(newBoard, newBoard.getTurn(), actualPlayer, iterationsLeft-1);
+				if (currScore<worstScore)
 				{
-					bestScore = nextMove.getaScore();
-					bestMove = nextMove.getaMove();
-				}
+					worstScore = currScore;
+				}					
 			}
-			else endTurnMoveExists = true;
 		}
-		if (bestScore==currScore) 
-		{
-			if (endTurnMoveExists) return new MoveAndScore(new CCMove(turnPlayer, null, null), currScore);
-		}
-		return new MoveAndScore(bestMove, bestScore);
+		return worstScore;
+
 	}
 }

@@ -1,4 +1,4 @@
-package s260488774.heusticiPlayer;
+package s260488774heusticiPlayer;
 
 import halma.CCBoard;
 import halma.CCMove;

@@ -1,4 +1,4 @@
-package s260488774.heusticiPlayer;
+package s260488774heusticiPlayer;
 
 import halma.CCBoard;
 import halma.CCMove;
@@ -10,14 +10,14 @@ import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
 
-public class s260488774Player extends Player
+public class s260488774PlayerHeuristic extends Player
 {
 	private Random r = new Random();
 
 
 	/** Provide a default public constructor */
-	public s260488774Player() { super("random"); }
-	public s260488774Player(String s) { super(s); }
+	public s260488774PlayerHeuristic() { super("random"); }
+	public s260488774PlayerHeuristic(String s) { super(s); }
 
 	public Board createBoard() { return new CCBoard(); }
 
