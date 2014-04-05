@@ -1,17 +1,14 @@
 package s260488774;
 
 import halma.CCBoard;
-import halma.CCMove;
 
 import java.awt.Point;
-import java.util.Random;
 
 public class HalmaHeuristics
 {
 	private final static int DISTANCE_FROM_BASE_MULTIPLIER = 1;
 	private final static int OFF_CENTRE_DISTANCE_MULTIPLIER = 1;
 	private final static int SPLIT_DISTANCE_MULTIPLIER = 1;
-	private static Random r = new Random();
 
 
 	/**
