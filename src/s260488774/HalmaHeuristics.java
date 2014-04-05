@@ -6,27 +6,26 @@ import java.awt.Point;
 
 public class HalmaHeuristics
 {
-	private final static double STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
-	private final static double STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
-	private final static double STARTGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
-	private final static double STARTGAME_CHECK_IF_WIN_MULTIPLIER = .5;
-	private final static double STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
-	private final static double STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private  static double STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private  static double STARTGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private  static double STARTGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private  static double STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 
-	private final static double MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
-	private final static double MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
-	private final static double MIDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
-	private final static double MIDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
-	private final static double MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
-	private final static double MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private  static double MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private  static double MIDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private  static double MIDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private  static double MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 
-	private final static double ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
-	private final static double ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
-	private final static double ENDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
-	private final static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
-	private final static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
-	private final static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
-
+	private  static double ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private  static double ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private  static double ENDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private  static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private  static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 	/**
 	 * the "farthest" base point for each player.
 	 */
@@ -130,7 +129,7 @@ public class HalmaHeuristics
 	 * @param board the current game board.
 	 * @return the total Manhattan distance between all the player's pieces and the "farthest" base point (the corner point). Higher is better for the player.
 	 */
-	private static double distanceFromBase(int playerID, CCBoard board)
+	public static double distanceFromBase(int playerID, CCBoard board)
 	{
 		double playerDist = 0;
 		for (Point pt: board.getPieces(playerID))
@@ -158,7 +157,7 @@ public class HalmaHeuristics
 	 * @param board the current board
 	 * @return the value of how far "off center" the player's pieces are. Lower is better.
 	 */
-	private static double offCentreDistance(int playerID, CCBoard board)
+	public static double offCentreDistance(int playerID, CCBoard board)
 	{
 		double playerDist = 0;
 		if (playerID == 0)
@@ -197,7 +196,7 @@ public class HalmaHeuristics
 	 * @param board the current board.
 	 * @return the Manhattan distance between the front most piece and the back most piece. Lower is better.
 	 */
-	private static double splitDistance(int playerID, CCBoard board)
+	public static double splitDistance(int playerID, CCBoard board)
 	{
 		Point furthestPt = cornerBasePoint[playerID];
 		Point closestPt = targetCorners[playerID];
@@ -222,7 +221,7 @@ public class HalmaHeuristics
 	 * @param board the board game as it currently is.
 	 * @return 1 if the player has won, 0 if not.
 	 */
-	private static double checkIfWin(int ID, CCBoard board){
+	public static double checkIfWin(int ID, CCBoard board){
 		assert(ID<4);
 		boolean win=true;
 		int base_id= ID^3;
@@ -244,7 +243,7 @@ public class HalmaHeuristics
 	 * @param board the current game board.
 	 * @return number of pieces at edge of target zone.
 	 */
-	private static double NumberOfPiecesAtEdgeOfTarget(int ID, CCBoard board)
+	public static double NumberOfPiecesAtEdgeOfTarget(int ID, CCBoard board)
 	{
 		double edgeResult = 0;
 		for (Point piece: board.getPieces(ID))
@@ -266,7 +265,7 @@ public class HalmaHeuristics
 	 * @param board the current game board.
 	 * @return the number of pieces at the non-edge of the target zone.
 	 */
-	private static double NumberOfPiecesAtNonEdgeOfTarget(int ID, CCBoard board)
+	public static double NumberOfPiecesAtNonEdgeOfTarget(int ID, CCBoard board)
 	{
 		double nonEdgeResult = 0;
 		for (Point piece: board.getPieces(ID))
