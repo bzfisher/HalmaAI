@@ -6,12 +6,26 @@ import java.awt.Point;
 
 public class HalmaHeuristics
 {
-	private final static int DISTANCE_FROM_BASE_MULTIPLIER = 1;
-	private final static int OFF_CENTRE_DISTANCE_MULTIPLIER = 1;
-	private final static int SPLIT_DISTANCE_MULTIPLIER = 1;
-	private final static int CHECK_IF_WIN_MULTIPLIER = 1;
-	private final static int NON_EDGE_TARGET_PIECES_MULTIPLIER = 1;
-	private final static int EDGE_TARGET_PIECES_MULTIPLIER = 1;
+	private final static double STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private final static double STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private final static double STARTGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private final static double STARTGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private final static double STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private final static double STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+
+	private final static double MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private final static double MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private final static double MIDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private final static double MIDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private final static double MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private final static double MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+
+	private final static double ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private final static double ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = .5;
+	private final static double ENDGAME_SPLIT_DISTANCE_MULTIPLIER = .5;
+	private final static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
+	private final static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private final static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 
 	/**
 	 * the "farthest" base point for each player.
@@ -36,7 +50,7 @@ public class HalmaHeuristics
 			new Point(13,15),new Point(12,15),new Point(15,15),new Point(14,15),new Point(15,12),new Point(15,14),new Point(15,13)
 		}
 		};
-	
+
 	private static Point[][] nonEdgeBasePoints = 
 		{
 		{
@@ -76,11 +90,33 @@ public class HalmaHeuristics
 		{
 			if (CCBoard.getTeamIndex(i)==CCBoard.getTeamIndex(currPlayer))
 			{
-				currPlayersScore = currPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				if (board.getTurnsPlayed()<100)
+				{
+					currPlayersScore = currPlayersScore+(STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(STARTGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (STARTGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}
+				else if (NumberOfPiecesAtNonEdgeOfTarget(i, board)!=0 || NumberOfPiecesAtEdgeOfTarget(i, board)!=0)
+				{
+					currPlayersScore = currPlayersScore+(ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(ENDGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (ENDGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}
+				else
+				{
+					currPlayersScore = currPlayersScore+(MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(MIDGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (MIDGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}
 			}
 			else
 			{
-				enemyPlayersScore = enemyPlayersScore+(DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board))+(CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				if (board.getTurnsPlayed()<100)
+				{
+					enemyPlayersScore = enemyPlayersScore+(STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(STARTGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (STARTGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}
+				else if (NumberOfPiecesAtNonEdgeOfTarget(i, board)!=0 || NumberOfPiecesAtEdgeOfTarget(i, board)!=0)
+				{
+					enemyPlayersScore = enemyPlayersScore+(ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(ENDGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (ENDGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}
+				else
+				{
+					enemyPlayersScore = enemyPlayersScore+(MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER*distanceFromBase(i,board))-(MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER*offCentreDistance(i,board))-(MIDGAME_SPLIT_DISTANCE_MULTIPLIER*splitDistance(i,board)) + (MIDGAME_CHECK_IF_WIN_MULTIPLIER*checkIfWin(i, board)) + (MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtEdgeOfTarget(i, board)) + (MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER*NumberOfPiecesAtNonEdgeOfTarget(i, board));
+				}	
 			}
 		}
 		return currPlayersScore-enemyPlayersScore;
@@ -179,7 +215,7 @@ public class HalmaHeuristics
 		return manhattanDistance(furthestPt, closestPt);
 	}
 
-	
+
 	/**
 	 * Checks if the player has won. Higher is better.
 	 * @param ID the player ID we are checking for. 
@@ -201,7 +237,7 @@ public class HalmaHeuristics
 		if (win) return 1;
 		return 0;
 	}
-	
+
 	/**
 	 * checks how many pieces are at the edges of the target zone. Higher is better. 
 	 * @param ID the player ID we are checking for.
@@ -223,7 +259,7 @@ public class HalmaHeuristics
 		}
 		return edgeResult;
 	}
-	
+
 	/**
 	 * 	 * checks how many pieces are at the  non-edges of the target zone. Higher is better. 
 	 * @param ID the ID to check for. 
@@ -245,7 +281,7 @@ public class HalmaHeuristics
 		}
 		return nonEdgeResult;
 	}
-	
-	
+
+
 
 }
