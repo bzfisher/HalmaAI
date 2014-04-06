@@ -12,6 +12,9 @@ import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
 
+import s260488774.HalmaHeuristics;
+
+
 public class s260488774minimaxPlayer extends Player
 {
 	private Random r = new Random();

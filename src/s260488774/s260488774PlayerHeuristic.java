@@ -9,6 +9,9 @@ import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
 
+import s260488774.HalmaHeuristics;
+
+
 public class s260488774PlayerHeuristic extends Player
 {
 	private static Random r = new Random();
@@ -17,9 +20,9 @@ public class s260488774PlayerHeuristic extends Player
 	/** Provide a default public constructor */
 	public s260488774PlayerHeuristic() { super("random"); }
 	public s260488774PlayerHeuristic(String s) { super(s); }
-
+	
 	public Board createBoard() { return new CCBoard(); }
-
+	
 	@Override
 	public Move chooseMove(Board inputBoard)
 	{
