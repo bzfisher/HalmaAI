@@ -26,14 +26,14 @@ public class HalmaHeuristics
 	private  static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = 0.5062073056309188;
 	private  static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER =   0.30088863194437127;
 	private  static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = 0.33548573853022834;
-	/**
-	 * the "farthest" base point for each player.
-	 */
+	
+	//the corner base point for each player.
 	private static Point[] cornerBasePoint= {	new Point(0,0), 
 		new Point(15,0),
 		new Point(0,15),
 		new Point(15,15)};
 
+	//all the base points that are on the edge of the game board.
 	private static Point[][] edgeBasePoints = 
 		{
 		{
@@ -50,6 +50,7 @@ public class HalmaHeuristics
 		}
 		};
 
+	//all the base point that are NOT on the edge of the game board.
 	private static Point[][] nonEdgeBasePoints = 
 		{
 		{
@@ -66,15 +67,9 @@ public class HalmaHeuristics
 		}
 		};
 
-	/**
-	 * the furthest target zone point for each player.
-	 */
-	private static Point[] targetCorners = {	new Point(15,15), 
-		new Point(0,15),
-		new Point(15,0),
-		new Point(0,0)};
-
+	//the ID of each player's opposite player.
 	private static int[] oppositePlayerID = {3, 2, 1, 0};
+	
 	/**
 	 * @param board the current game board.
 	 * @param currPlayer the player for which we wish to calculate the board score.
@@ -199,7 +194,7 @@ public class HalmaHeuristics
 	public static double splitDistance(int playerID, CCBoard board)
 	{
 		Point furthestPt = cornerBasePoint[playerID];
-		Point closestPt = targetCorners[playerID];
+		Point closestPt = cornerBasePoint[oppositePlayerID[playerID]];
 		for (Point pt: board.getPieces(playerID))
 		{
 			if (manhattanDistance(closestPt, cornerBasePoint[playerID])>manhattanDistance(pt, cornerBasePoint[playerID]))
@@ -260,7 +255,7 @@ public class HalmaHeuristics
 	}
 
 	/**
-	 * 	 * checks how many pieces are at the  non-edges of the target zone. Higher is better. 
+	 ** checks how many pieces are at the  non-edges of the target zone. Higher is better. 
 	 * @param ID the ID to check for. 
 	 * @param board the current game board.
 	 * @return the number of pieces at the non-edge of the target zone.
@@ -281,6 +276,11 @@ public class HalmaHeuristics
 		return nonEdgeResult;
 	}
 	
+	/**
+	 * @param ID player's ID
+	 * @param board the current game board
+	 * @return true if the players still has any pieces in the base; false otherwise.
+	 */
 	public static boolean piecesInBase(int ID, CCBoard board)
 	{
 		for (Point piece: board.getPieces(ID))
@@ -302,7 +302,4 @@ public class HalmaHeuristics
 		}
 		return false;
 	}
-
-
-
 }
