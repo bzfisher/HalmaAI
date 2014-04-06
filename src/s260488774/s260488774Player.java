@@ -2,7 +2,7 @@ package s260488774;
 
 import halma.CCBoard;
 import halma.CCMove;
-import s260488774.HalmaHeuristics;
+import s260488774.mytools.HalmaHeuristics;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
 
-public class s260488774AlphaBetaPlayer extends Player
+public class s260488774Player extends Player
 {
 	private final static int STOP_WHEN_MILLISECONDS_LEFT = 75;
 	
@@ -21,8 +21,8 @@ public class s260488774AlphaBetaPlayer extends Player
 	int startTime;
 
 	//Constructors
-	public s260488774AlphaBetaPlayer() { super("s260488774Player"); }
-	public s260488774AlphaBetaPlayer(String s) { super(s); }
+	public s260488774Player() { super("s260488774Player"); }
+	public s260488774Player(String s) { super(s); }
 	public Board createBoard() { return new CCBoard(); }
 
 	@Override

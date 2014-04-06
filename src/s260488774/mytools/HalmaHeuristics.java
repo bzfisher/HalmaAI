@@ -1,4 +1,4 @@
-package s260488774;
+package s260488774.mytools;
 
 import halma.CCBoard;
 

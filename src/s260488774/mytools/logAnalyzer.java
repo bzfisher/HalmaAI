@@ -9,8 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import s260488774.HalmaHeuristics;
-
 public class logAnalyzer
 {
 	private final static String LOG_FILES_LOCATION = "/Users/Ben/git/HalmaAI/logs";

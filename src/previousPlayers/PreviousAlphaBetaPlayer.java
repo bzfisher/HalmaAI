@@ -2,7 +2,7 @@ package previousPlayers;
 
 import halma.CCBoard;
 import halma.CCMove;
-import s260488774.HalmaHeuristics;
+import s260488774.mytools.HalmaHeuristics;
 
 import java.awt.Point;
 import java.util.ArrayList;

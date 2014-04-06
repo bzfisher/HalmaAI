@@ -1,4 +1,4 @@
-package s260488774;
+package previousPlayers;
 
 import halma.CCBoard;
 import halma.CCMove;
@@ -8,8 +8,7 @@ import java.util.Random;
 import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
-
-import s260488774.HalmaHeuristics;
+import s260488774.mytools.HalmaHeuristics;
 
 
 public class s260488774PlayerHeuristic extends Player
