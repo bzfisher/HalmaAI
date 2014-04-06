@@ -15,12 +15,12 @@ import boardgame.Player;
 
 public class s260488774AlphaBetaPlayer extends Player
 {
+	private final static int STOP_WHEN_MILLISECONDS_LEFT = 75;
 	private Random r = new Random();
 	int startTime;
 
-	public ArrayList<CCMove> previousMovesInTurn = new ArrayList<CCMove>();
 	/** Provide a default public constructor */
-	public s260488774AlphaBetaPlayer() { super("random"); }
+	public s260488774AlphaBetaPlayer() { super("s260488774Player"); }
 	public s260488774AlphaBetaPlayer(String s) { super(s); }
 
 	public Board createBoard() { return new CCBoard(); }
@@ -30,6 +30,13 @@ public class s260488774AlphaBetaPlayer extends Player
 	{
 		startTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		CCBoard board = (CCBoard) inputBoard;
+		
+		//if we are at the end game, go for more depth.
+		if (HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(board.getTurn(), board)!=0 || HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(board.getTurn(), board)!=0)
+		{
+			return alphaBeta(board, 3);
+		}
+
 		return alphaBeta(board, 4);
 	}
 
@@ -63,32 +70,11 @@ public class s260488774AlphaBetaPlayer extends Player
 			else nullMoveExists=true;
 		}		
 
-		//if we already played this move this turn, choose a random move instead.
-		for (CCMove previousMove: previousMovesInTurn)
-		{
-			if (bestMove.getFrom()!=null)
-				if (movesEqual(previousMove, bestMove))
-				{
-					bestMove = legalMoves.get(r.nextInt(legalMoves.size()));
-				}
-		}
-
 		if (bestScore==originalScore)
 		{
 			if (nullMoveExists) bestMove =  new CCMove(board.getTurn(), null, null);
 		}
 
-		//if this is the last move this turn, clear our previousMovesInTurn list.
-		CCBoard newBoard = (CCBoard)board.clone();
-		newBoard.move(bestMove);
-		if (newBoard.getTurn()!=board.getTurn())
-		{
-			previousMovesInTurn.clear();
-			return bestMove;
-		}
-
-		//else, add the move to the previous moves list, and return it.
-		previousMovesInTurn.add(bestMove);
 		return bestMove;
 	}
 
@@ -96,7 +82,7 @@ public class s260488774AlphaBetaPlayer extends Player
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
 		//if we are at the last turn, return the actual board score.
-		if (depth<1 || (currentTime-startTime) < 30) return HalmaHeuristics.boardUtility(board, actualPlayer);
+		if (depth<1 || (currentTime-startTime) < STOP_WHEN_MILLISECONDS_LEFT) return HalmaHeuristics.boardUtility(board, actualPlayer);
 
 		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
 		{
@@ -128,19 +114,5 @@ public class s260488774AlphaBetaPlayer extends Player
 			}
 			return beta;
 		}
-	}
-
-	
-	private boolean movesEqual(CCMove move1, CCMove move2)
-	{
-		Point from1 = move1.getFrom();
-		Point from2 = move2.getFrom();
-		Point to1 = move1.getTo();
-		Point to2 = move2.getTo();
-		if (from1.getX()==from2.getX() && from1.getY()==from2.getY())
-		{
-			if (to1.getX()==to2.getX() && to1.getY()==to2.getY())  return true;
-		}
-		return false;
 	}
 }
