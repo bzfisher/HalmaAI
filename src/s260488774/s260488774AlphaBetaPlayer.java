@@ -16,35 +16,38 @@ import boardgame.Player;
 public class s260488774AlphaBetaPlayer extends Player
 {
 	private final static int STOP_WHEN_MILLISECONDS_LEFT = 75;
+	
 	private Random r = new Random();
 	int startTime;
 
-	/** Provide a default public constructor */
+	//Constructors
 	public s260488774AlphaBetaPlayer() { super("s260488774Player"); }
 	public s260488774AlphaBetaPlayer(String s) { super(s); }
-
 	public Board createBoard() { return new CCBoard(); }
 
 	@Override
 	public Move chooseMove(Board inputBoard)
 	{
 		startTime = Calendar.getInstance().get(Calendar.MILLISECOND);
+		
+		//cast the board
 		CCBoard board = (CCBoard) inputBoard;
 		
-		//if we are at the end game, go for more depth.
+		//if we are nearing the end of the game, pursue less iteration depth.
 		if (HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(board.getTurn(), board)!=0 || HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(board.getTurn(), board)!=0)
 		{
 			return alphaBeta(board, 3);
 		}
 
+		//else, pursue a depth of 4
 		return alphaBeta(board, 4);
 	}
 
 	/**
-	 * Top level function for minimax recursion algorithm. Calls the helper (which does the actual recursion), and proccesses and results.
+	 * Top level function for alpha-beta pruning recursion algorithm. Calls the helper (which does the actual recursion), and proccesses and results.
 	 * @param board the current game board. 
 	 * @param iterationsLeft number of iterations we wish to perform. 
-	 * @return The best move according to the mini-max algorithm.
+	 * @return The best move according to the alpha-beta algorithm.
 	 */
 	private CCMove alphaBeta(CCBoard board, int iterationsLeft)
 	{
@@ -80,8 +83,8 @@ public class s260488774AlphaBetaPlayer extends Player
 
 	private double alphaBetaHelper(CCBoard board,  int depth, double alpha, double beta,int turnPlayer, int actualPlayer)
 	{
+		//if we are at the last turn or are running low on time, cut the calculation short.
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
-		//if we are at the last turn, return the actual board score.
 		if (depth<1 || (currentTime-startTime) < STOP_WHEN_MILLISECONDS_LEFT) return HalmaHeuristics.boardUtility(board, actualPlayer);
 
 		if (CCBoard.getTeamIndex(turnPlayer)==CCBoard.getTeamIndex(actualPlayer))
