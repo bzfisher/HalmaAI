@@ -12,15 +12,15 @@ import boardgame.Board;
 import boardgame.Move;
 import boardgame.Player;
 
-public class s260488774Player extends Player
+public class s260488774AlphaBetaPlayer extends Player
 {
 	private Random r = new Random();
 	int startTime;
 
 	public ArrayList<CCMove> previousMovesInTurn = new ArrayList<CCMove>();
 	/** Provide a default public constructor */
-	public s260488774Player() { super("random"); }
-	public s260488774Player(String s) { super(s); }
+	public s260488774AlphaBetaPlayer() { super("random"); }
+	public s260488774AlphaBetaPlayer(String s) { super(s); }
 
 	public Board createBoard() { return new CCBoard(); }
 
