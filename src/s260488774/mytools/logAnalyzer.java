@@ -6,7 +6,6 @@ import halma.CCMove;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,10 +14,17 @@ import s260488774.HalmaHeuristics;
 public class logAnalyzer
 {
 	private final static String LOG_FILES_LOCATION = "/Users/Ben/git/HalmaAI/logs";
-	private final static String ANALYSIS_FILE_LOCATION = "/Users/Ben/logs/Analysis.txt";
+	private static double[] weights = new double[18];
+	private final static double ALPHA = 0.001;
 
 	public static void main(String[] args) throws IOException
 	{
+		int [] positive = {0,3,4,5,6,9,10,11,12,15,16,17};
+		int [] negatives = {1,2,7,8,13,14};
+
+		for (int i: positive) weights[i] = .5;
+		for (int i: negatives) weights[i] = -.5;
+
 		File folder = new File(LOG_FILES_LOCATION);
 		File[] files = folder.listFiles(); 
 
@@ -62,33 +68,33 @@ public class logAnalyzer
 								double[] currXValues = new double[19];
 								for (int i=0; i<currXValues.length; i++) currXValues[i] = 0;
 
-								if (board.getTurnsPlayed()<100)
+								if (HalmaHeuristics.piecesInBase(currID, board))
 								{
 									currXValues[0] = HalmaHeuristics.distanceFromBase(currID,board);
-									currXValues[1] = 0-HalmaHeuristics.offCentreDistance(currID,board);
-									currXValues[2] = 0- HalmaHeuristics.splitDistance(currID,board);
+									currXValues[1] = HalmaHeuristics.offCentreDistance(currID,board);
+									currXValues[2] = HalmaHeuristics.splitDistance(currID,board);
 									currXValues[3] = HalmaHeuristics.checkIfWin(currID, board);
-									currXValues[4] =  HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
+									currXValues[4] = HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
 									currXValues[5] = HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board);
 								}
 
 								else if (HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board)!=0 || HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board)!=0)
 								{
-									currXValues[6] = HalmaHeuristics.distanceFromBase(currID,board);
-									currXValues[7] = 0-HalmaHeuristics.offCentreDistance(currID,board);
-									currXValues[8] = 0- HalmaHeuristics.splitDistance(currID,board);
-									currXValues[9] = HalmaHeuristics.checkIfWin(currID, board);
-									currXValues[10] =  HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
-									currXValues[11] = HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board);
+									currXValues[12] = HalmaHeuristics.distanceFromBase(currID,board);
+									currXValues[13] = HalmaHeuristics.offCentreDistance(currID,board);
+									currXValues[14] = HalmaHeuristics.splitDistance(currID,board);
+									currXValues[15] = HalmaHeuristics.checkIfWin(currID, board);
+									currXValues[16] = HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
+									currXValues[17] = HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board);
 								}
 								else
 								{
-									currXValues[12] = HalmaHeuristics.distanceFromBase(currID,board);
-									currXValues[13] = 0-HalmaHeuristics.offCentreDistance(currID,board);
-									currXValues[14] = 0- HalmaHeuristics.splitDistance(currID,board);
-									currXValues[15] = HalmaHeuristics.checkIfWin(currID, board);
-									currXValues[16] =  HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
-									currXValues[17] = HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board);
+									currXValues[6] = HalmaHeuristics.distanceFromBase(currID,board);
+									currXValues[7] = HalmaHeuristics.offCentreDistance(currID,board);
+									currXValues[8] = HalmaHeuristics.splitDistance(currID,board);
+									currXValues[9] = HalmaHeuristics.checkIfWin(currID, board);
+									currXValues[10] =HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(currID, board);
+									currXValues[11] =HalmaHeuristics.NumberOfPiecesAtNonEdgeOfTarget(currID, board);
 								}
 								if (currID==winner) currXValues[18] = 1;
 								else currXValues[18] = 0;
@@ -101,34 +107,27 @@ public class logAnalyzer
 				finally {
 					br2.close();
 				}
-
-
-				ArrayList<StringBuffer> totalStringToWrite = new ArrayList<StringBuffer>();
 				for (double[] array:xAndYValues)
 				{
-					StringBuffer buffer=  new StringBuffer();
-					for (double db: array)
-					{
-						buffer.append(db+",");
-					}
-					buffer.append("\n");
-					totalStringToWrite.add(buffer);
+					calculateWeights(array);
 				}
 
-				try
-				{
-					FileWriter fw = new FileWriter(ANALYSIS_FILE_LOCATION,true); //the true will append the new data
-					for (StringBuffer bf: totalStringToWrite)
-					{
-						fw.write(bf.toString());
-					}
-					fw.close();
-				}
-				catch(IOException ioe)
-				{
-				}
 			}
 		}
+		for (double db:weights)
+		{
+			System.out.println(db);
+		}
+
 	}
 
+
+	public static void calculateWeights(double[] logLine)
+	{
+		for (int i=0; i<logLine.length-1; i++)
+		{
+			double reward = logLine[logLine.length-1];
+			if (logLine[i]!=0) weights[i] = weights[i] + ALPHA*(reward/logLine[i] - weights[i]);
+		}
+	}
 }
