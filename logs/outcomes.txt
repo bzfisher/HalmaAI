@@ -1,1 +1,15 @@
-1	random	random	random	random	Player-1	random	100	game00001.log	
+1	random	random	random	random	Player-1	random	290	game00001.log	
+2	random	random	random	random	Player-1	random	302	game00002.log	
+3	random	random	random	random	Player-1	random	100	game00003.log	
+4	random	random	random	random	Player-0	random	100	game00004.log	
+5	random	random	random	random	Player-1	random	260	game00005.log	
+6	random	random	random	random	Player-1	random	261	game00006.log	
+7	random	random	random	random	Player-1	random	363	game00007.log	
+8	random	random	random	random	Player-1	random	328	game00008.log	
+9	random	random	random	random	DRAW	NOBODY	5000	game00009.log	
+10	random	random	random	random	Player-1	random	322	game00010.log	
+11	random	random	random	random	Player-1	random	100	game00011.log	
+12	random	random	random	random	Player-1	random	100	game00012.log	
+13	random	random	random	random	Player-0	random	100	game00013.log	
+14	random	random	random	random	Player-1	random	100	game00014.log	
+15	random	random	random	random	Player-1	random	100	game00015.log	
