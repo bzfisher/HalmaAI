@@ -1,4 +1,4 @@
-package s260488774;
+package s260488774.mytools;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package s260488774;
+package s260488774.mytools;
 
 import halma.CCBoard;
 import halma.CCMove;
@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import s260488774.HalmaHeuristics;
 
 public class logAnalyzer
 {
