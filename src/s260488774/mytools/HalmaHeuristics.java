@@ -6,26 +6,26 @@ import java.awt.Point;
 
 public class HalmaHeuristics
 {
-	private  static double STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER =  0.1610877839485485;
-	private  static double STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = -0.1378784403777396;
-	private  static double STARTGAME_SPLIT_DISTANCE_MULTIPLIER =  -0.12128709057321646;
+	private  static double STARTGAME_DISTANCE_FROM_BASE_MULTIPLIER =  .5;
+	private  static double STARTGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = -.5;
+	private  static double STARTGAME_SPLIT_DISTANCE_MULTIPLIER =  -.5;
 	private  static double STARTGAME_CHECK_IF_WIN_MULTIPLIER = 0.5;
-	private  static double STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = 0.49034673169483695;
-	private  static double STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER =   0.4984113078951363;
+	private  static double STARTGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
+	private  static double STARTGAME_EDGE_TARGET_PIECES_MULTIPLIER =   .5;
 
-	private  static double MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER = 0.1753737505470343;
-	private  static double MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER =   -0.15448215181559152;
-	private  static double MIDGAME_SPLIT_DISTANCE_MULTIPLIER =  -0.1359360994937074;
+	private  static double MIDGAME_DISTANCE_FROM_BASE_MULTIPLIER = .5;
+	private  static double MIDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER =   -0.5;
+	private  static double MIDGAME_SPLIT_DISTANCE_MULTIPLIER =  -0.5;
 	private  static double MIDGAME_CHECK_IF_WIN_MULTIPLIER = .5;
 	private  static double MIDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 	private  static double MIDGAME_EDGE_TARGET_PIECES_MULTIPLIER = .5;
 
-	private  static double ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER =  0.16291898932001964;
-	private  static double ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = -0.12960572698622236;
-	private  static double ENDGAME_SPLIT_DISTANCE_MULTIPLIER =  -0.12208292929155459;
-	private  static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = 0.5062073056309188;
-	private  static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER =   0.30088863194437127;
-	private  static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = 0.33548573853022834;
+	private  static double ENDGAME_DISTANCE_FROM_BASE_MULTIPLIER =  0.5;
+	private  static double ENDGAME_OFF_CENTRE_DISTANCE_MULTIPLIER = -0.5;
+	private  static double ENDGAME_SPLIT_DISTANCE_MULTIPLIER =  -0.5;
+	private  static double ENDGAME_CHECK_IF_WIN_MULTIPLIER = 0.5;
+	private  static double ENDGAME_NON_EDGE_TARGET_PIECES_MULTIPLIER =   0.5;
+	private  static double ENDGAME_EDGE_TARGET_PIECES_MULTIPLIER = 0.5;
 	
 	//the corner base point for each player.
 	private static Point[] cornerBasePoint= {	new Point(0,0), 
@@ -193,20 +193,18 @@ public class HalmaHeuristics
 	 */
 	public static double splitDistance(int playerID, CCBoard board)
 	{
-		Point furthestPt = cornerBasePoint[playerID];
+		Point secondClosestPt = cornerBasePoint[oppositePlayerID[playerID]];
 		Point closestPt = cornerBasePoint[oppositePlayerID[playerID]];
 		for (Point pt: board.getPieces(playerID))
 		{
+			
 			if (manhattanDistance(closestPt, cornerBasePoint[playerID])>manhattanDistance(pt, cornerBasePoint[playerID]))
 			{
+				secondClosestPt = closestPt = pt;
 				closestPt = pt;
 			}
-			if (manhattanDistance(furthestPt, cornerBasePoint[playerID])<manhattanDistance(pt, cornerBasePoint[playerID]))
-			{
-				furthestPt = pt;
-			} 
 		}
-		return manhattanDistance(furthestPt, closestPt);
+		return manhattanDistance(secondClosestPt, closestPt);
 	}
 
 
