@@ -1,0 +1,17 @@
+# Server version 0.08 running on web112016.wireless.mcgill.ca:8123
+# Game ID: 281
+# Board class: halma.CCBoard
+# Timeout: 1000
+# Date: Tue Apr 08 22:54:54 EDT 2014
+# Player 1: Player-0, '260507016', running on 142.157.166.8
+# Player 2: Player-1, '260507016', running on 142.157.166.8
+# Player 3: Player-2, '260507016', running on 142.157.166.8
+# Player 4: Player-3, 's260488774Player', running on web112016.wireless.mcgill.ca
+START Player-0 260507016
+START Player-1 260507016
+START Player-2 260507016
+START Player-3 s260488774Player
+0 (2,2) (3,3)
+GAMEOVER TIMEOUT Player-1
+WINNER Player-0
+# Game ended: Tue Apr 08 22:54:55 EDT 2014

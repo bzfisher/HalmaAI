@@ -1,0 +1,19 @@
+# Server version 0.08 running on web112092.wireless.mcgill.ca:8123
+# Game ID: 296
+# Board class: halma.CCBoard
+# Timeout: 1000
+# Date: Wed Apr 09 18:10:04 EDT 2014
+# Player 1: Player-0, 'random', running on web112092.wireless.mcgill.ca
+# Player 2: Player-1, 'random', running on web112092.wireless.mcgill.ca
+# Player 3: Player-2, 's260488774Player', running on web112092.wireless.mcgill.ca
+# Player 4: Player-3, 'Human', running on web112092.wireless.mcgill.ca
+START Player-0 random
+START Player-1 random
+START Player-2 s260488774Player
+START Player-3 Human
+0 (0,3) (2,3)
+0 null null
+1 (14,2) (12,2)
+1 null null
+2 (3,15) (3,13)
+2 null null
