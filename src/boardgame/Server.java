@@ -54,7 +54,7 @@ import java.awt.EventQueue;
 public class Server implements Runnable {
     protected static final String VERSION = "0.08";
     protected static final int DEFAULT_PORT = 8123;
-    protected static final int DEFAULT_TIMEOUT = 1000;
+    protected static final int DEFAULT_TIMEOUT = 3000;
     protected static final String DEFAULT_BOARDCLASS = "halma.CCBoard";
     
     protected static final boolean DBGNET = false;
@@ -157,7 +157,7 @@ public class Server implements Runnable {
                 // in which case we want to quit anyway
                 if( ss == null ) ss = new ServerSocket(cmdArgPort);
                 // Create the server
-                svr = new Server( b, argGui, cmdArgQuiet, ss, cmdArgTimeout );
+                svr = new Server( b, argGui, cmdArgQuiet, ss, 2000 );
                 // Launch the server
                 svr.run();
                 // Add it to the list of running servers
