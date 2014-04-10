@@ -35,6 +35,9 @@ public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 		ID = currPlayerID;
 		gameBoard = pGameBoard;
 		score = HalmaHeuristics.boardUtility(gameBoard, lastMove, currPlayerID);
+		if (lastMove.getTo()!=null)
+		if (HalmaHeuristics.manhattanDistance(lastMove.getFrom(),HalmaHeuristics.cornerBasePoint[currPlayerID]) < HalmaHeuristics.manhattanDistance(lastMove.getTo(),HalmaHeuristics.cornerBasePoint[currPlayerID]))
+		if (lastMove.isHop()) score = score+.1;
 	}
 
 	public void generateChildren()

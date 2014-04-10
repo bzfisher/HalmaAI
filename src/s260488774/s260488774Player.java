@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
+import s260488774.mytools.HalmaHeuristics;
 import s260488774.mytools.monteCarloTreeNode;
 import boardgame.Board;
 import boardgame.Move;
@@ -14,7 +15,7 @@ import boardgame.Player;
 
 public class s260488774Player extends Player
 {
-	private final static int STOP_WHEN_MILLISECONDS_LEFT = 75;
+	private final static int STOP_WHEN_MILLISECONDS_LEFT = 30;
 
 	int startTime;
 
@@ -31,8 +32,21 @@ public class s260488774Player extends Player
 		//cast the board
 		CCBoard board = (CCBoard) inputBoard;
 
-		//else, pursue a depth of 4
+		if (HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(board.getTurn(), board)>0.1)
+			return endGamemonteCarloSearch(board, 1000000);
 		return monteCarloSearch(board, 1000000);
+	}
+
+	public CCMove endGamemonteCarloSearch(CCBoard board, int numberOfIterations)
+	{
+		ArrayList<monteCarloTreeNode> nodes = new ArrayList<monteCarloTreeNode>();
+		for (CCMove move : board.getLegalMoves())
+		{
+			CCBoard newboard = (CCBoard) board.clone();
+			newboard.move(move);
+			nodes.add(new monteCarloTreeNode(newboard, board.getTurn(), 1, move, move));
+		}
+		return monteCarloSearchHelper(numberOfIterations, nodes).getParentMove();
 	}
 
 	public CCMove monteCarloSearch(CCBoard board, int numberOfIterations)
@@ -46,7 +60,7 @@ public class s260488774Player extends Player
 		}
 		return monteCarloSearchHelper(numberOfIterations, nodes).getParentMove();
 	}
-	
+
 	public monteCarloTreeNode monteCarloSearchHelper(int iterationsLeft, ArrayList<monteCarloTreeNode> nodes)
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);

@@ -34,7 +34,7 @@ public class HalmaHeuristics
 	private static double IS_HOP_MULTIPLIER = .5;
 	
 	//the corner base point for each player.
-	private static Point[] cornerBasePoint= {	new Point(0,0), 
+	public static Point[] cornerBasePoint= {	new Point(0,0), 
 		new Point(15,0),
 		new Point(0,15),
 		new Point(15,15)};
@@ -184,7 +184,7 @@ public class HalmaHeuristics
 	 * @param target the target point.
 	 * @return the Manhattan distance between current location and the target point.
 	 */
-	private static double manhattanDistance(Point location, Point target)
+	public static double manhattanDistance(Point location, Point target)
 	{
 		double distX = Math.abs(location.getX() - target.getX());
 		double distY = Math.abs(location.getY() - target.getY());
