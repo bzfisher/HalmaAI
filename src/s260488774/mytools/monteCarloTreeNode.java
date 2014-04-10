@@ -1,11 +1,9 @@
-package s260488774;
+package s260488774.mytools;
 
 import halma.CCBoard;
 import halma.CCMove;
 
 import java.util.ArrayList;
-
-import s260488774.mytools.HalmaHeuristics;
 
 public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 {
