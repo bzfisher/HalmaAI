@@ -5,6 +5,10 @@ import halma.CCMove;
 
 import java.util.ArrayList;
 
+/**
+ * A tree node, containing all the necessary information for a Monte Carlo search.
+ *
+ */
 public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 {
 	private int ID;
@@ -12,13 +16,16 @@ public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 	private double score;
 	private ArrayList<monteCarloTreeNode> children = new ArrayList<monteCarloTreeNode>();
 	private int numberOfVisits;
-	private 	CCMove parentMove;
+	private CCMove parentMove;
 
 	public CCMove getParentMove()
 	{
 		return parentMove;
 	}
 
+	/**
+	 * constructor that does not take into account the move that last to here. 
+	 */
 	public monteCarloTreeNode(CCBoard pGameBoard, int currPlayerID, int NumberOfVisits, CCMove pParentMove)
 	{
 		parentMove = pParentMove;
@@ -28,6 +35,9 @@ public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 		score = HalmaHeuristics.boardUtility(gameBoard, currPlayerID);
 	}
 	
+	/**
+	 * constructor that does take into account the move that last to here. 
+	 */
 	public monteCarloTreeNode(CCBoard pGameBoard, int currPlayerID, int NumberOfVisits, CCMove pParentMove, CCMove lastMove)
 	{
 		parentMove = pParentMove;
@@ -40,6 +50,9 @@ public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 		if (lastMove.isHop()) score = score+.1;
 	}
 
+	/**
+	 * populates the list of children for this node. Allows for lazy evalution of the search tree.
+	 */
 	public void generateChildren()
 	{
 		for (CCMove legalMove : gameBoard.getLegalMoves())
@@ -50,29 +63,45 @@ public class monteCarloTreeNode implements Comparable<monteCarloTreeNode>
 		}
 	}
 
+	/**
+	 * @return the score of the current node. 
+	 */
 	public double getScore()
 	{
 		return score;
 	}
 	
+	/**
+	 * @param pScore the score we wish to assign to current node. 
+	 */
 	public void setScore(double pScore)
 	{
 		score = pScore;
 	}
 
+	/**
+	 * @return the list of children of this node. 
+	 */
 	public ArrayList<monteCarloTreeNode> getChildren()
 	{
 		return children;
 	}
+	/**
+	 * @return the number of times this node has been "visited" (i.e. its score has been updated)
+	 */
 	public int getNumberOfVisits()
 	{
 		return numberOfVisits;
 	}
 
+	/**
+	 * @param numberOfVisits the number of visits to this node. 
+	 */
 	public void setNumberOfVisits(int numberOfVisits)
 	{
 		this.numberOfVisits = numberOfVisits;
 	}
+	
 	@Override
 	public int compareTo(monteCarloTreeNode arg0)
 	{
