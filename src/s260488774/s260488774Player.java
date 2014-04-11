@@ -32,11 +32,21 @@ public class s260488774Player extends Player
 		//cast the board
 		CCBoard board = (CCBoard) inputBoard;
 
+		//if we are near the end of the game, use the appropriate method
 		if (HalmaHeuristics.NumberOfPiecesAtEdgeOfTarget(board.getTurn(), board)>0.1)
 			return endGamemonteCarloSearch(board, 1000000);
+		
+		//otherwise, use the usual method.
 		return monteCarloSearch(board, 1000000);
 	}
 
+	/**
+	 * Searches the CCboard to either a depth given or until we run out of time (as indicated by the STOP_WHEN_MILLISECONDS_LEFT variable).
+	 * puts more emphasis on hops than the method below.
+	 * @param board the current game board
+	 * @param numberOfIterations the depth to which we should search.
+	 * @return the best move, as determined by the monte carlo search
+	 */
 	public CCMove endGamemonteCarloSearch(CCBoard board, int numberOfIterations)
 	{
 		ArrayList<monteCarloTreeNode> nodes = new ArrayList<monteCarloTreeNode>();
@@ -49,6 +59,13 @@ public class s260488774Player extends Player
 		return monteCarloSearchHelper(numberOfIterations, nodes).getParentMove();
 	}
 
+	/**
+	 * Searches the CCboard to either a depth given or until we run out of time (as indicated by the STOP_WHEN_MILLISECONDS_LEFT variable).
+	 * puts LESS emphasis on hops than the method below.
+	 * @param board the current game board
+	 * @param numberOfIterations the depth to which we should search.
+	 * @return the best move, as determined by the monte carlo search
+	 */
 	public CCMove monteCarloSearch(CCBoard board, int numberOfIterations)
 	{
 		ArrayList<monteCarloTreeNode> nodes = new ArrayList<monteCarloTreeNode>();
@@ -61,6 +78,11 @@ public class s260488774Player extends Player
 		return monteCarloSearchHelper(numberOfIterations, nodes).getParentMove();
 	}
 
+	/**
+	 * @param iterationsLeft the number of iterations left
+	 * @param nodes the list of nodes expended thus far.
+	 * @return the best monteCarloTreeNode at depth iterationsLeft or when time is close to running out.
+	 */
 	public monteCarloTreeNode monteCarloSearchHelper(int iterationsLeft, ArrayList<monteCarloTreeNode> nodes)
 	{
 		int currentTime = Calendar.getInstance().get(Calendar.MILLISECOND);
@@ -84,6 +106,10 @@ public class s260488774Player extends Player
 		return monteCarloSearchHelper(iterationsLeft-1, nodes);
 	}
 
+	/**
+	 * @param nodes the list of nodes
+	 * @return the highest scoring node from the list.
+	 */
 	private monteCarloTreeNode bestNode(ArrayList<monteCarloTreeNode> nodes)
 	{
 		Collections.sort(nodes);
